@@ -12,3 +12,10 @@ Check the readme for more information.
 
 Feel free to use this objectloader.
 If you modify this file and redistribute it, please mention my name.
+
+## Planned features
+
+- [ ] Option for loading every triangle not more than once
+- [ ] Loading texture coordinates
+- [ ] Option for generating normals when they are not provided in the model
+- [ ] Option for loading vertices without loading indices
