@@ -182,10 +182,10 @@ private:
 		std::string result;
 		std::vector<std::string> strings;
 		while (std::getline(ss, result, '/')) {
-			strings.push_back(result-1);
+			strings.push_back(result);
 		}
 		if (strings.size() >= 1)
-			m_indices->push_back(std::stoi(strings[0]));
+			m_indices->push_back(std::stoi(strings[0]-1));
 		else if (strings.size() <= 0)
 			return false;
 		return true;
