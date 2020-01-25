@@ -1,6 +1,8 @@
 #include <iostream>
 #include "ObjLoader.hpp"
 
+#ifndef TESTING
+
 int main(int argc, char* argv[]) {
 	ObjLoader loader;
 	loader.LoadFromFile("Cube.obj");
@@ -22,3 +24,4 @@ int main(int argc, char* argv[]) {
 	std::cin.get();
 	return 0;
 }
+#endif // !TESTING

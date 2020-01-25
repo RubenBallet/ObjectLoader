@@ -22,6 +22,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "Flags.h"
 
 /**
  * Simple modelloader for .obj files.
@@ -53,7 +54,7 @@ public:
 	 * @return bool - true if loading is successful, false if loading failse
 	 *		When loading failes an error message can be retrieved with the "GetErrorString" method.
 	 */
-	bool LoadFromFile(const std::string& file) {
+	bool LoadFromFile(const std::string& file, int flags = 0) {
 		Clear();
 		std::string line;
 		std::ifstream infile(file);
@@ -89,7 +90,7 @@ public:
 					return false;
 				}
 			}
-			else if (firstChar.compare("vn") == 0) {
+			else if (firstChar.compare("vn") == 0 && !(flags & GENERATE_NORMALS_FORCED)) {
 				if (!ProcessVN(ss)) {
 					Error = true;
 					m_errorString = "Parse error on line: " + lineNumber;
@@ -97,7 +98,7 @@ public:
 				}
 			}
 			else if (firstChar.compare("f") == 0) {
-				if (!ProcessF(ss)) {
+				if (!ProcessF(ss, flags)) {
 					Error = true;
 					m_errorString = "Parse error on line: " + lineNumber;
 					return false;
@@ -159,6 +160,10 @@ private:
 		//Do nothing
 		return true;
 	}
+	/*
+	* Process Vertices
+	* Return false if loading failse
+	*/
 	bool ProcessV(std::stringstream& ss) {
 		double x, y, z;
 		if(!(ss >> x >> y >> z))
@@ -168,13 +173,22 @@ private:
 		m_vertices->push_back(z);
 		return true;
 	}
-	bool ProcessF(std::stringstream& ss) {
+	/*
+	* Process Faces
+	* Return false if loading failse
+	*/
+	bool ProcessF(std::stringstream& ss, int flags = 0) {
 		std::string x, y, z;
 		if (!(ss >> x >> y >> z))
 			return false;
 		ProcessIndex(x);
 		ProcessIndex(y);
 		ProcessIndex(z);
+		if (!(flags & MIN_TRIANGLES)) {
+			ProcessIndex(z);
+			ProcessIndex(y);
+			ProcessIndex(x);
+		}
 		return true;
 	}
 	bool ProcessIndex(const std::string& s) {
